@@ -14,8 +14,18 @@ public class CategoryManager {
         categoryDao.save(category);
     }
 
-    public void loadByCode(String code) {
-        categoryDao.loadByCode(code);
+    public CategoryEntity loadByCode(String code) {
+        return categoryDao.loadByCode(code);
     }
 
+    public CategoryEntity updateCategory(String code, String subject) {
+        CategoryEntity category = loadByCode(code);
+        category.setSubject(subject);
+        return category = categoryDao.update(category);
+        //TODO Handel the not-found exception
+    }
+
+    public void deleteCategory(String code) {
+        categoryDao.delete(code);
+    }
 }

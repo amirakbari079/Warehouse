@@ -6,10 +6,12 @@ import com.example.warehouse.manager.BookManager;
 import com.example.warehouse.mapper.BookMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,7 +35,8 @@ public class BookService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response METHODNAME(BookDto bookDto) {
         bookmanager.save(bookmapper.mapper(bookDto));
-//        RETURN Response.status(201).BUILD();
-        return null;
+        return Response.status(201).build();
     }
+
+
 }
