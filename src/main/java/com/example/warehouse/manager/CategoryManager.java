@@ -1,12 +1,14 @@
 package com.example.warehouse.manager;
 
 import com.example.warehouse.dao.CategoryDao;
+import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryManager {
+
     @Autowired
     CategoryDao categoryDao;
 
@@ -27,5 +29,9 @@ public class CategoryManager {
 
     public void deleteCategory(String code) {
         categoryDao.delete(code);
+    }
+
+    public void searchCategory(CategorySearchParamsDto searchParamsDto) {
+        categoryDao.search(searchParamsDto);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.warehouse.dao;
 
+import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import javax.ws.rs.QueryParam;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -45,8 +48,19 @@ public class CategoryDao {
             entityManager.remove(category);
         }
         System.out.println("Entity not found in the database");
+        //TODO Implementing Not Found Exception
     }
-    //TODO Implementing Not Found Exception
 
+    @Transactional
+    public List<CategoryEntity> search(CategorySearchParamsDto searchParamsDto) {
+        String queryString = "SELECT e FROM CategoryEntity e WHERE e.subject LIKE :fieldValue";
+        TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
+        query.setParameter("fieldValue", "%" + searchParamsDto.getSubject() + "%");
+        List<CategoryEntity> CategoryEntityList = query.getResultList();
+        return CategoryEntityList;
+
+    }
 
 }
+
+
