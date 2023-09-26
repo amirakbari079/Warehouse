@@ -52,14 +52,31 @@ public class CategoryDao {
     }
 
     @Transactional
-    public List<CategoryEntity> search(CategorySearchParamsDto searchParamsDto) {
-        String queryString = "SELECT e FROM CategoryEntity e WHERE e.subject LIKE :fieldValue";
+    public List<CategoryEntity> search(String subject, String code) {
+        String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1";
+        if (code != null) {
+            queryString += " AND e.code LIKE :code";
+        } else if (subject != null) {
+            queryString += " AND e.subject LIKE :subject";
+        }
         TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
-        query.setParameter("fieldValue", "%" + searchParamsDto.getSubject() + "%");
+        if (code != null) {
+            query.setParameter("code", "%" + code + "%");
+        } else if (subject != null) {
+            query.setParameter("subject", "%" + subject + "%");
+        }
         List<CategoryEntity> CategoryEntityList = query.getResultList();
         return CategoryEntityList;
-
     }
+
+//    @Transactional
+//    public List<CategoryEntity> search(String subject,String code) {
+//        String queryString = "SELECT e FROM CategoryEntity e WHERE e.subject LIKE :fieldValue";
+//        TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
+//        query.setParameter("fieldValue", "%" + subject + "%");
+//        List<CategoryEntity> CategoryEntityList = query.getResultList();
+//        return CategoryEntityList;
+//    }
 
 }
 

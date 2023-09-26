@@ -6,6 +6,8 @@ import com.example.warehouse.entity.CategoryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CategoryManager {
 
@@ -31,7 +33,7 @@ public class CategoryManager {
         categoryDao.delete(code);
     }
 
-    public void searchCategory(CategorySearchParamsDto searchParamsDto) {
-        categoryDao.search(searchParamsDto);
+    public List<CategoryEntity> searchCategory(CategorySearchParamsDto searchParamsDto) {
+        return categoryDao.search(searchParamsDto.getSubject(),searchParamsDto.getCode());
     }
 }

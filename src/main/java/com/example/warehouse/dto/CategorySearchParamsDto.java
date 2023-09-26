@@ -12,5 +12,5 @@ public class CategorySearchParamsDto {
     private Integer pageSize;
     private Integer pageNumber;
     private String orderBy;
-    private SortDirection sortDirection;
+    private String sortDirection;
 }

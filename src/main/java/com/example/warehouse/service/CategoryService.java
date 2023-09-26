@@ -1,20 +1,19 @@
 package com.example.warehouse.service;
 
 import com.example.warehouse.dto.CategoryDto;
+import com.example.warehouse.dto.CategoryDtoPage;
 import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
 import com.example.warehouse.manager.CategoryManager;
-import com.example.warehouse.manager.SortDirection;
 import com.example.warehouse.mapper.CategoryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Slf4j
 @Path("/category")
@@ -60,16 +59,18 @@ public class CategoryService {
     }
 
     @GET
-    @Path("search")
-    public void search(@QueryParam("subject") String subject,
-                       @QueryParam("code") String code,
-                       @QueryParam("pageSize") Integer pageSize,
-                       @QueryParam("pageNumber") Integer pageNumber,
-                       @QueryParam("orderBy") String orderBy,
-                       @QueryParam("sortDirection") SortDirection sortDirection
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CategoryDtoPage search(@QueryParam("subject") String subject,
+                                  @QueryParam("code") String code,
+                                  @QueryParam("pageSize") Integer pageSize,
+                                  @QueryParam("pageNumber") Integer pageNumber,
+                                  @QueryParam("orderBy") String orderBy,
+                                  @QueryParam("sortDirection") String sortDirection
     ) {
         CategorySearchParamsDto searchParamsDto = new CategorySearchParamsDto(subject, code, pageSize, pageNumber, orderBy, sortDirection);
-        categoryManager.searchCategory(searchParamsDto);
+        return categoryMapper.categoryListToDto(categoryManager.searchCategory(searchParamsDto));
+
     }
 
 
