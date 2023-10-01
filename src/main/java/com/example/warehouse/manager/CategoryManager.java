@@ -34,6 +34,6 @@ public class CategoryManager {
     }
 
     public List<CategoryEntity> searchCategory(CategorySearchParamsDto searchParamsDto) {
-        return categoryDao.search(searchParamsDto.getSubject(),searchParamsDto.getCode());
+        return categoryDao.search(searchParamsDto.getSubject(),searchParamsDto.getCode(),searchParamsDto.getOrderBy(),searchParamsDto.getSortDirection());
     }
 }

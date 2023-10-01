@@ -52,17 +52,20 @@ public class CategoryDao {
     }
 
     @Transactional
-    public List<CategoryEntity> search(String subject, String code) {
-        String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1";
-        if (code != null) {
-            queryString += " AND e.code LIKE :code";
-        } else if (subject != null) {
-            queryString += " AND e.subject LIKE :subject";
+    public List<CategoryEntity> search(String subject, String code, String oderBy, String sortDirction) {
+        String conditioinQuery = "";
+        if (code != null && !code.isEmpty()) {
+            conditioinQuery = " AND e.code= :code";
         }
+        if (subject != null && !subject.isEmpty()) {
+            conditioinQuery += " AND e.subject LIKE :subject";
+        }
+        String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1" + conditioinQuery + " ORDER BY " + oderBy.toLowerCase() + " " + sortDirction;
         TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
-        if (code != null) {
-            query.setParameter("code", "%" + code + "%");
-        } else if (subject != null) {
+        if (code != null && !code.isEmpty()) {
+            query.setParameter("code",code );
+        }
+        if (subject != null && !subject.isEmpty()) {
             query.setParameter("subject", "%" + subject + "%");
         }
         List<CategoryEntity> CategoryEntityList = query.getResultList();

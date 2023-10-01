@@ -1,1 +1,1 @@
-var app=angular.module("warehouse.category",['ngResource','ngTable']);
+var app=angular.module("warehouse.category",['ngResource','ngTable','ngRoute']);

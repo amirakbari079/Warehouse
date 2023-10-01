@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="warehouse">
+
+<div ng-controller="CategoryListController" class="container m-50">
+    <form>
+        <label>Subject</label>
+        <input type="text" ng-model="searchParams.subject" name="subject"/>
+        <label>Code :</label>
+        <input type="text" ng-model="searchParams.code" name="code"/>
+        <br/>
+        <br/>
+        <label>Page Size :</label>
+        <button ng-click="search()">Search</button>
+    </form>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="c in $data">
+            <td data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
+            <td data-title="'Code'" sortable="'Code'">{{c.code}}</td>
+            <td data-title="'Actions'">
+                <button ng-click="display(c.code)">Display</button>
+                <button ng-click="edit(c.code)">Edit</button>
+                <button ng-click="delete(c.code)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <p>Page:{{tableParams.page()}}</p>
+    <p>Total:{{tableParams.total()}}</p>
+    <!-- Html Content Shown in image above -->
+</div>
+<h1>Categories</h1>
+<h3>Search Criteria</h3>
+</body>
+</html>

@@ -6,6 +6,7 @@
     <!--  AngularJS  -->
     <script src="assets/lib/angular/angular.js"></script>
     <script src="assets/lib/angular/angular-resource.js"></script>
+    <script src="assets/lib/angular/angular-route.js"></script>
 
 
     <!-- ng-table -->
@@ -16,59 +17,13 @@
     <script src="app/components/category/category.module.js"></script>
     <script src="app/components/category/category.service.js"></script>
     <script src="app/components/category/category.controllers.js"></script>
+    <script src="app/components/warehouse.module.js"></script>
 
     <!--  bootstrap-css  -->
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap/bootstrap.css"/>
 
 </head>
-<body ng-app="warehouse.category">
-<div ng-controller="CategoryListController" ng-init="searchParams={}" class="container m-50">
-    <form>
-        <label>Subject</label>
-        <input type="text" ng-model="searchParams.subject" name="subject"/>
-        <label>Code :</label>
-        <input type="text" ng-model="searchParams.code" name="code"/>
-        <br/>
-        <br/>
-        <label>Page Size :</label>
-        <input type="radio" name="pageSize" id="pageNumberOne" value="10"/>
-        <label for="pageNumberOne">10</label>
-        <input type="radio" name="pageSize" id="pageNumberTwo" value="25"/>
-        <label for="pageNumberTwo">25</label>
-        <button ng-click="search()">Search</button>
-    </form>
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <th>Code</th>-->
-<!--            <td ng-bind="data[0].code"></td>-->
-<!--            <th>Subject</th>-->
-<!--            <td ng-bind="data[0].subject"></td>-->
-<!--            <th>Actions</th>-->
-<!--            <td>-->
-<!--                <button>Display</button>-->
-<!--                <button>Edite</button>-->
-<!--                <button>Delete</button>-->
-<!--            </td>-->
-<!--        </tr>-->
-
-<!--    </table>-->
-
-    <table ng-table="tableParams" class="table">
-        <tr ng-repeat="c in $data">
-            <td data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
-            <td data-title="'Code'" sortable="'Code'">{{c.code}}</td>
-            <td data-title="'Actions'">
-                <button ng-click="display(c.code)">Display</button>
-                <button ng-click="edit(c.code)">Edit</button>
-                <button ng-click="delete(c.code)">Delete</button>
-            </td>
-        </tr>
-    </table>
-    <p>Page:{{tableParams.page()}}</p>
-    <p>Total:{{tableParams.total()}}</p>
-    <!-- Html Content Shown in image above -->
-</div>
-<h1>Categories</h1>
-<h3>Search Criteria</h3>
+<body ng-app="warehouse">
+<div ng-view></div>
 </body>
 </html>

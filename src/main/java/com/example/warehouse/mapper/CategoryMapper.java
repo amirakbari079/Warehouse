@@ -32,6 +32,7 @@ public class CategoryMapper {
             categoryDtoList.add(toDto(categoryEntity.get(i)));
         }
         categoryDtoPage.setItems(categoryDtoList);
+        categoryDtoPage.setTotalCount((long) categoryDtoList.size());
 
         return categoryDtoPage;
     }
