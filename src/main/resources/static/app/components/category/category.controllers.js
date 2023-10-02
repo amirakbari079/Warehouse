@@ -59,17 +59,21 @@ app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableP
 app.controller('categoryDisplayController',['$scope','$route','CategoryService',function ($scope,$route,CategoryService){
     var code = $route.current.params.code;
     console.log(code);
-    CategoryService.search(code).$promise.then(onFulfillment, onRejection);
+    CategoryService.loadByCode({ code: code }).$promise.then(onFulfillment, onRejection);
+
     // $scope.searchParams=$location.search();
     function onFulfillment(searchResponse) {
         //Update internal parameters of ng-table after arrival of new data from back-end, total count of data is used for rendering pagination
-        params.total(searchResponse.totalCount);
-
-        $defer.resolve(searchResponse.items);//Use defered API to provide category items to ng-table
+        $scope.subject=searchResponse.subject;
+        $scope.code=searchResponse.code;
+        alert("okkkkkkkkkk")
     }
 
     function onRejection(reason) {
         // Flash.create('danger', 'Problem occurred while searching categories')
+        $scope.code=searchResponse.code;
+        alert("nooooooo")
+
     }
 }])
 
