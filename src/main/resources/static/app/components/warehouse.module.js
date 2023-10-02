@@ -4,6 +4,9 @@ warehouse.config(function ($routeProvider){
         templateUrl:"app/components/category/category.list.html",
         controller:"CategoryListController",
         reloadOnSearch:false
+    }).when("/category/display/:code",{
+        templateUrl:"app/components/category/category.display.html",
+        controller:"categoryDisplayController"
     })
 
 })

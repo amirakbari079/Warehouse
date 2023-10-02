@@ -73,5 +73,15 @@ public class CategoryService {
 
     }
 
+//    @GET
+//    @Path("/{code}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public CategoryDtoPage search(@PathParam("code") String subject
+//    ) {
+//        CategorySearchParamsDto searchParamsDto = new CategorySearchParamsDto(code);
+//        return categoryMapper.categoryListToDto(categoryManager.searchCategory(searchParamsDto));
+//
+//    }
+
 
 }
