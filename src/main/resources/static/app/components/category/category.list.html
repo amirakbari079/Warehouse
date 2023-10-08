@@ -1,22 +1,26 @@
-<div class="container m-50">
+<div class="container" id="container">
+    <h3>Search 🔍</h3>
     <form>
-        <label>Subject</label>
-        <input type="text" ng-model="searchParams.subject" name="subject"/>
-        <label>Code :</label>
-        <input type="text" ng-model="searchParams.code" name="code"/>
-        <br/>
-        <br/>
-        <label>Page Size :</label>
-        <button ng-click="search()">Search</button>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Subject</label>
+                <input class="form-control" type="text" ng-model="searchParams.subject" name="subject"/>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Code :</label>
+                <input class="form-control" type="text" ng-model="searchParams.code" name="code"/>
+            </div>
+            <button class="myBtn search-btn" ng-click="search()">Search</button>
+        </div>
     </form>
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="c in $data">
-            <td data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
-            <td data-title="'Code'" sortable="'Code'">{{c.code}}</td>
+            <td class="tbl-content" data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
+            <td class="tbl-content" data-title="'Code'" sortable="'Code'">{{c.code}}</td>
             <td data-title="'Actions'">
-                <button ng-click="display(c.code)">Display</button>
-                <button ng-click="edit(c.code)">Edit</button>
-                <button ng-click="delete(c.code)">Delete</button>
+                <button class="myBtn primery-btn" ng-click="display(c.code)">Display</button>
+                <button class="myBtn warn-btn" ng-click="edit(c.code)">Edit</button>
+                <button class="myBtn danger-btn" ng-click="delete(c.code)">Delete</button>
             </td>
         </tr>
     </table>

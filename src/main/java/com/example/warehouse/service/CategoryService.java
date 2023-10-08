@@ -42,11 +42,11 @@ public class CategoryService {
 //        return Response.status(201).build();
     }
 
-    @POST
+    @PUT
     @Path("update/{code}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CategoryDto update(@PathParam("code") String code, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto update(@PathParam("code") String code,CategoryDto categoryDto) {
         CategoryEntity updatedCategory = categoryManager.updateCategory(code, categoryDto.getSubject());
         CategoryDto category = categoryMapper.toDto(updatedCategory);
         return category;
@@ -70,8 +70,9 @@ public class CategoryService {
     ) {
         CategorySearchParamsDto searchParamsDto = new CategorySearchParamsDto(subject, code, pageSize, pageNumber, orderBy, sortDirection);
         return categoryMapper.categoryListToDto(categoryManager.searchCategory(searchParamsDto));
-
     }
+
+
 
 
 

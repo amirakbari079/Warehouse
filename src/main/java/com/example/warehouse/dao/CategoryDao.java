@@ -70,7 +70,9 @@ public class CategoryDao {
         }
         List<CategoryEntity> CategoryEntityList = query.getResultList();
         return CategoryEntityList;
+
     }
+
 
 //    @Transactional
 //    public List<CategoryEntity> search(String subject,String code) {
