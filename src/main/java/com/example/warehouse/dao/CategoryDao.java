@@ -1,5 +1,7 @@
 package com.example.warehouse.dao;
 
+import com.example.warehouse.Exception.CategoryNotFoundException;
+import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +28,16 @@ public class CategoryDao {
     }
 
     @Transactional
-    public CategoryEntity loadByCode(String code) {
-        String queryString = "select c from CategoryEntity c where c.code = :code";
-        TypedQuery<CategoryEntity> typedQuery = entityManager.createQuery(queryString, CategoryEntity.class);
-        typedQuery.setParameter("code", code);
-        CategoryEntity category = typedQuery.getSingleResult();
-        return category;
+    public CategoryEntity loadByCode(String code) throws CategoryNotFoundException{
+        try {
+            String queryString = "select c from CategoryEntity c where c.code = :code";
+            TypedQuery<CategoryEntity> typedQuery = entityManager.createQuery(queryString, CategoryEntity.class);
+            typedQuery.setParameter("code", code);
+            return typedQuery.getSingleResult();
+        }catch (Exception e){
+           throw new CategoryNotFoundException();
+        }
+
     }
 
     @Transactional
@@ -42,11 +48,14 @@ public class CategoryDao {
     }
 
     @Transactional
-    public void delete(String code) {
+    public void delete(String code) throws CustomException, CategoryNotFoundException {
         CategoryEntity category = loadByCode(code);
-        if (category != null) {
+        try {
             entityManager.remove(category);
+        } catch (NullPointerException nullPointerException) {
+           throw new CustomException();
         }
+
         System.out.println("Entity not found in the database");
         //TODO Implementing Not Found Exception
     }
@@ -63,7 +72,7 @@ public class CategoryDao {
         String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1" + conditioinQuery + " ORDER BY " + oderBy.toLowerCase() + " " + sortDirction;
         TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
         if (code != null && !code.isEmpty()) {
-            query.setParameter("code",code );
+            query.setParameter("code", code);
         }
         if (subject != null && !subject.isEmpty()) {
             query.setParameter("subject", "%" + subject + "%");

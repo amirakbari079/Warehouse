@@ -1,5 +1,7 @@
 package com.example.warehouse.service;
 
+import com.example.warehouse.Exception.CategoryNotFoundException;
+import com.example.warehouse.Exception.NullSubjectException;
 import com.example.warehouse.dto.CategoryDto;
 import com.example.warehouse.dto.CategoryDtoPage;
 import com.example.warehouse.dto.CategorySearchParamsDto;
@@ -27,9 +29,15 @@ public class CategoryService {
 //    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{code}")
-    public CategoryDto CategoryGetRequest(@PathParam("code") String code) {
-        CategoryEntity category = categoryManager.loadByCode(code);
-        return categoryMapper.toDto(category);
+    public Response CategoryGetRequest(@PathParam("code") String code) {
+        CategoryEntity category = null;
+        try {
+            category = categoryManager.loadByCode(code);
+            return Response.ok(categoryMapper.toDto(category)).build();
+        } catch (CategoryNotFoundException e) {
+            return Response.status(404, e.getMessage()).build();
+        }
+
         //TODO Implementing Not Found Exception
     }
 
@@ -46,16 +54,29 @@ public class CategoryService {
     @Path("update/{code}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CategoryDto update(@PathParam("code") String code,CategoryDto categoryDto) {
-        CategoryEntity updatedCategory = categoryManager.updateCategory(code, categoryDto.getSubject());
-        CategoryDto category = categoryMapper.toDto(updatedCategory);
-        return category;
+    public Response update(@PathParam("code") String code, CategoryDto categoryDto){
+        try {
+            if (categoryDto.getSubject() == null) {
+                throw new NullSubjectException();
+            }
+            CategoryEntity updatedCategory = categoryManager.updateCategory(code, categoryDto.getSubject());
+           return Response.ok(categoryMapper.toDto(updatedCategory)).build();
+        } catch (NullSubjectException e) {
+            return Response.status(422, e.getMessage()).build();
+        } catch (CategoryNotFoundException e) {
+            return Response.status(404, e.getMessage()).build();
+        }
     }
 
     @DELETE
     @Path("/{code}")
-    public void delete(@PathParam("code") String code) {
-        categoryManager.deleteCategory(code);
+    public Response delete(@PathParam("code") String code) {
+        try {
+            categoryManager.deleteCategory(code);
+        } catch (Exception e) {
+            return Response.status(404, "There is no Category by this Code").build();
+        }
+        return Response.status(200, "Successful").build();
     }
 
     @GET
@@ -71,9 +92,6 @@ public class CategoryService {
         CategorySearchParamsDto searchParamsDto = new CategorySearchParamsDto(subject, code, pageSize, pageNumber, orderBy, sortDirection);
         return categoryMapper.categoryListToDto(categoryManager.searchCategory(searchParamsDto));
     }
-
-
-
 
 
 }

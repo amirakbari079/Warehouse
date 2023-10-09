@@ -34,9 +34,7 @@ public class BookService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response METHODNAME(BookDto bookDto) {
-        if (bookmapper.mapper(bookDto)){
-
-        }
+        bookmanager.save(bookmapper.mapper(bookDto));
         return Response.status(201).build();
     }
 

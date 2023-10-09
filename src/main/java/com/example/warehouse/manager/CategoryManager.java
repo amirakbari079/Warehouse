@@ -1,5 +1,7 @@
 package com.example.warehouse.manager;
 
+import com.example.warehouse.Exception.CategoryNotFoundException;
+import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.dao.CategoryDao;
 import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
@@ -18,18 +20,18 @@ public class CategoryManager {
         categoryDao.save(category);
     }
 
-    public CategoryEntity loadByCode(String code) {
+    public CategoryEntity loadByCode(String code) throws CategoryNotFoundException {
         return categoryDao.loadByCode(code);
     }
 
-    public CategoryEntity updateCategory(String code, String subject) {
+    public CategoryEntity updateCategory(String code, String subject) throws CategoryNotFoundException {
         CategoryEntity category = loadByCode(code);
         category.setSubject(subject);
         return category = categoryDao.update(category);
         //TODO Handel the not-found exception
     }
 
-    public void deleteCategory(String code) {
+    public void deleteCategory(String code) throws CustomException, CategoryNotFoundException {
         categoryDao.delete(code);
     }
 
