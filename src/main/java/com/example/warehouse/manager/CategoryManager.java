@@ -16,8 +16,8 @@ public class CategoryManager {
     @Autowired
     CategoryDao categoryDao;
 
-    public void save(CategoryEntity category) {
-        categoryDao.save(category);
+    public CategoryEntity save(CategoryEntity category) {
+        return categoryDao.save(category);
     }
 
     public CategoryEntity loadByCode(String code) throws CategoryNotFoundException {

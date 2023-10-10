@@ -22,9 +22,13 @@ public class CategoryDao {
     EntityManager entityManager;
 
     @Transactional
-    public void save(CategoryEntity category) {
+    public CategoryEntity save(CategoryEntity category) {
         entityManager.persist(category);
-        log.info("category is saved to database. {}", category);
+        String queryString="select c from CategoryEntity c where c.subject = :subject";
+        TypedQuery<CategoryEntity> typedQuery=entityManager.createQuery(queryString,CategoryEntity.class);
+        typedQuery.setParameter("subject",category.getSubject());
+        return typedQuery.getSingleResult();
+//        log.info("category is saved to database. {}", category);
     }
 
     @Transactional
@@ -55,9 +59,7 @@ public class CategoryDao {
         } catch (NullPointerException nullPointerException) {
            throw new CustomException();
         }
-
-        System.out.println("Entity not found in the database");
-        //TODO Implementing Not Found Exception
+                //TODO Implementing Not Found Exception
     }
 
     @Transactional

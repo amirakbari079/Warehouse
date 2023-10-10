@@ -43,31 +43,41 @@ td{
 
 .myBtn {
     padding: 5px 9px;
-    border-radius: 6px;
+    border-radius: 5px;
     border: none;
     font-family: Calibri;
     margin-right: 10px;
     font-weight: bold;
+    background: #f3f3f3;
+    /*box-shadow: 1px -1px 10px 0px rgba(54, 48, 74, 0.3), 3px 3px 0px 0px rgb(54, 48, 74);*/
+    transition: transform 0.3s ease;
+
+}
+.myBtn:hover{
+    transform: translateY(-5px) !important;
+    box-shadow: 1px -1px 10px 0px rgba(54, 48, 74, 0.3), 3px 3px 0px 0px rgb(54, 48, 74) !important;
+
 }
 
 .primery-btn {
     color: #4c00ff;
-    background: #e9daff;
-    border: 2px solid #4c00ff;
+    /*background: #e9daff;*/
+    /*border: 2px solid #4c00ff;*/
     box-shadow: 1px -1px 10px 0px rgba(76, 0, 255, 0.39), 3px 3px 0px 0px rgba(76, 0, 255, 1);
 }
 
 .warn-btn {
     color: #ff8800;
-    background: #fff1e2;
-    border: 2px solid #ff8800;
+    /*background: #fff1e2;*/
+    /*border: 2px solid #ff8800;*/
     box-shadow: 1px -1px 10px 0px rgb(255 136 0 / 39%), 3px 3px 0px 0px rgb(255, 136, 0) !important;
 }
 
+
 .danger-btn {
     color: #a80000;
-    background: #ffe0e0;
-    border: 2px solid #a80000;
+    /*background: #ffe0e0;*/
+    /*border: 2px solid #a80000;*/
     box-shadow: 1px -1px 10px 0px rgba(168, 0, 0, 0.39), 3px 3px 0px 0px rgb(168, 0, 0) !important;
 }
 
@@ -79,4 +89,16 @@ td{
     float: right;
     margin-bottom: 20px;
     margin-right: 10px !important;
+}
+
+.card-header{
+    background: #36304a !important;
+    /*border: 1px #36304a solid !important;*/
+    color: #fff;
+}
+
+.modal-header{
+    background: #36304a !important;
+    color: #fff;
+    border-radius: 6px 6px 0px 0px;
 }

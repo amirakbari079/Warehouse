@@ -1,5 +1,6 @@
 <div class="container" id="container">
     <h3>Search 🔍</h3>
+    <button class="myBtn">dawd</button>
     <form>
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -18,13 +19,15 @@
             <td class="tbl-content" data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
             <td class="tbl-content" data-title="'Code'" sortable="'Code'">{{c.code}}</td>
             <td data-title="'Actions'">
-                <button class="myBtn primery-btn" ng-click="display(c.code)">Display</button>
-                <button class="myBtn warn-btn" ng-click="edit(c.code)">Edit</button>
-                <button class="myBtn danger-btn" ng-click="delete(c.code)">Delete</button>
+                <button class="myBtn primery-btn" ng-click="display(c.code)">🔍</button>
+                <button class="myBtn warn-btn" ng-click="edit(c.code)"><i class="glyphicon glyphicon-pencil"></i></button>
+                <button class="myBtn danger-btn" ng-click="delete(c.code)"><i class="glyphicon glyphicon-trash"></i></button>
             </td>
         </tr>
     </table>
     <p>Page:{{tableParams.page()}}</p>
     <p>Total:{{tableParams.total()}}</p>
     <!-- Html Content Shown in image above -->
+
+    <button style="float: right;" class="myBtn primery-btn" ng-click="add()"><i class="glyphicon glyphicon-plus"></i></button>
 </div>

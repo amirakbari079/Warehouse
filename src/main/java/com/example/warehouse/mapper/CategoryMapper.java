@@ -12,7 +12,7 @@ import java.util.List;
 public class CategoryMapper {
     public CategoryEntity toEntity(CategoryDto categoryDto) {
         CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setSubject(categoryDto.getSubject());
+        categoryEntity.setSubject(categoryDto.getSubject().trim());
         return categoryEntity;
     }
 
@@ -25,15 +25,16 @@ public class CategoryMapper {
     }
 
 
-    public CategoryDtoPage categoryListToDto(List<CategoryEntity> categoryEntity){
-        CategoryDtoPage categoryDtoPage=new CategoryDtoPage();
+    public CategoryDtoPage categoryListEntityToDto(List<CategoryEntity> categoryEntity,Integer pageNumber,Integer pageSize) {
+        CategoryDtoPage categoryDtoPage = new CategoryDtoPage();
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        for (int i=0;i<categoryEntity.size();i++){
+        for (int i = 0; i < categoryEntity.size(); i++) {
             categoryDtoList.add(toDto(categoryEntity.get(i)));
         }
         categoryDtoPage.setItems(categoryDtoList);
         categoryDtoPage.setTotalCount((long) categoryDtoList.size());
-
+        categoryDtoPage.setPageNumber(pageNumber);
+        categoryDtoPage.setPageSize(pageSize);
         return categoryDtoPage;
     }
 }

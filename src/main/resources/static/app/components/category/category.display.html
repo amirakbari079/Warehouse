@@ -1,12 +1,12 @@
 <div class="container">
     <div class="row" style="display: flex;justify-content: center;align-items: center">
         <div class="col-xs-8">
-            <div style="border: 2px solid #2066a3;border-radius: 10px;margin-top: 50px;">
-                <div class="card-header bg-primary" style="border-radius: 8px 8px 0 0;padding: 15px">
+            <div style="border: 2px solid #36304a;border-radius: 10px;margin-top: 50px;">
+                <div class="card-header" style="border-radius: 8px 8px 0 0;padding: 15px">
                     <h4>My Card Title</h4>
                 </div>
                 <div class="card-body" style="padding: 20px;margin-bottom: 25px">
-                    <form>
+                    <form action="index.html?#/category/list?orderBy=Code&sortDirection=asc&pageNumber=1&pageSize=10">
                         <div class="form-group">
                             <label for="subject">Subject</label>
                             <input type="text" class="form-control" id="subject"
@@ -21,7 +21,7 @@
                                    ng-model="code"
                             >
                         </div>
-                        <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                        <button type="submit" class="myBtn primery-btn pull-right" >Back</button>
                     </form>
                 </div>
             </div>
