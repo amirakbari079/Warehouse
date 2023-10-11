@@ -1,20 +1,23 @@
 <div class="modal-header">
-    <h3 class="modal-title">Edite Category</h3>
+    <h3 class="modal-title" ng-if="isEditMode">Edit Category</h3>
+    <h3 class="modal-title" ng-if="!isEditMode">Add Category</h3>
+    <h1  ng-model="isEditMode"></h1>
 </div>
 <div class="modal-body">
     <form>
         <label for="subject">Subject</label>
-        <input type="text" class="form-control" id="subject" placeholder="Subject" ng-model="subject" name="subject"
-               required>
+        <input type="text" class="form-control" id="subject" placeholder="Subject" ng-model="subject" name="subject" required>
         </br>
-        <label for="Code">Code</label>
-        <input type="text" class="form-control" id="Code"
-               placeholder="Code"
-               ng-model="code"
-               disabled
-        >
+        <div ng-if="isEditMode">
+            <label for="Code">Code</label>
+            <input type="text" class="form-control" id="Code"
+                   placeholder="Code"
+                   ng-model="code"
+                   disabled
+            >
+        </div>
         <div class="modal-footer">
-            <button ng-click="ok()" class="myBtn primery-btn" value="OK">Ok</button>
+            <button ng-click="ok()" ng-disabled="!subject" class="myBtn primery-btn" value="OK">Save</button>
             <button ng-click="cancel()" class="myBtn danger-btn">Cancel</button>
         </div>
     </form>

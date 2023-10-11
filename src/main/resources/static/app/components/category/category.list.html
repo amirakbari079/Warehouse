@@ -1,33 +1,45 @@
 <div class="container" id="container">
-    <h3>Search 🔍</h3>
-    <button class="myBtn">dawd</button>
-    <form>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label>Subject</label>
-                <input class="form-control" type="text" ng-model="searchParams.subject" name="subject"/>
-            </div>
-            <div class="form-group col-md-6">
-                <label>Code :</label>
-                <input class="form-control" type="text" ng-model="searchParams.code" name="code"/>
-            </div>
-            <button class="myBtn search-btn" ng-click="search()">Search</button>
-        </div>
-    </form>
+    <flash-message
+            duration="5000"
+            show-close="true"
+            on-dismiss="myCallback(flash)"
+    ></flash-message>
+    <div class="form-wrapper">
+            <h3>Search Box 🔍</h3>
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Subject</label>
+                        <input class="form-control" type="text" ng-model="searchParams.subject" name="subject"/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Code :</label>
+                        <input class="form-control" type="text" ng-model="searchParams.code" name="code"/>
+                    </div>
+                    <button class="myBtn search-btn" ng-click="search()">Search</button>
+                </div>
+            </form>
+    </div>
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="c in $data">
             <td class="tbl-content" data-title="'Subject'" sortable="'Subject'">{{c.subject}}</td>
             <td class="tbl-content" data-title="'Code'" sortable="'Code'">{{c.code}}</td>
             <td data-title="'Actions'">
                 <button class="myBtn primery-btn" ng-click="display(c.code)">🔍</button>
-                <button class="myBtn warn-btn" ng-click="edit(c.code)"><i class="glyphicon glyphicon-pencil"></i></button>
-                <button class="myBtn danger-btn" ng-click="delete(c.code)"><i class="glyphicon glyphicon-trash"></i></button>
+                <button class="myBtn warn-btn" ng-click="edit(c.code)"><i class="glyphicon glyphicon-pencil"></i>
+                </button>
+                <button class="myBtn danger-btn" ng-click="delete(c.code)"><i class="glyphicon glyphicon-trash"></i>
+                </button>
             </td>
         </tr>
     </table>
-    <p>Page:{{tableParams.page()}}</p>
-    <p>Total:{{tableParams.total()}}</p>
-    <!-- Html Content Shown in image above -->
+    <div class="footer-wrapper">
+        <p>Page:{{tableParams.page()}}</p>
+        <div class="divi">
+            <p>Total:{{tableParams.total()}}</p>
+            <button style="float: right;" class="myBtn primery-btn" ng-click="add()"><i
+                    class="glyphicon glyphicon-plus"></i></button>
+        </div>
+    </div>
 
-    <button style="float: right;" class="myBtn primery-btn" ng-click="add()"><i class="glyphicon glyphicon-plus"></i></button>
 </div>

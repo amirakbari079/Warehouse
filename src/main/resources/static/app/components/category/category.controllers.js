@@ -1,74 +1,99 @@
-app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableParams', '$location', '$timeout', 'dialogs',
-    function ($scope, CategoryService, ngTableParams, $location, $timeout, dialogs) {
+categoryModule.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableParams', '$location', '$timeout', 'dialogs', 'Flash',
+    function ($scope, CategoryService, ngTableParams, $location, $timeout, dialogs, Flash) {
+        console.log("adawd")
+        console.log($location)
+        $scope.$on('$routeUpdate', function () {
+            // Update the variable here
+            console.log("O-------------OO")
+            debugger
+            $scope.tableParams.reload();
+
+        });
+
+        $scope.flashAlert = function (type, message) {
+            Flash.create(type, message, 2500, {class: 'custom-class', id: 'custom-id'}, true);
+        }
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Enter")
+                $scope.tableParams.reload()
+        });
         $scope.edit = function (code) {
+            var isEdit = true;
             dialogs.create('app/components/category/category.edit.html', 'CategoryEditController', {
-                code: code
+                code: code,
+                isEditMode: isEdit
             }, {}, '').result.then(resolveCallback, rejectCallback);
 
             function resolveCallback() {
                 setTimeout(function () {
                     $scope.tableParams.reload()
                     console.log("promise resolved,.3s")
-                },300)
+                }, 300)
             }
 
             function rejectCallback() {
-                setTimeout(function(){$scope.tableParams.reload()
-                console.log("promise rejected,.3s")}
-                    ,300)
+                setTimeout(function () {
+                        $scope.tableParams.reload()
+                        console.log("promise rejected,.3s")
+                    }
+                    , 300)
 
             }
         }
-        $scope.delete=function (code){
-            CategoryService.deleteCategory({'code': code});
-            setTimeout(function (){
-                $scope.tableParams.reload();
-            },300)
+        $scope.delete = function (code) {
+            CategoryService.deleteCategory({'code': code}).$promise.then(onFulfillment, onRejection);
+
+            function onFulfillment(response) {
+                setTimeout(function () {
+                    $scope.flashAlert('success', "Category with code: '" + code + "' removed successfully");
+                    $scope.tableParams.reload();
+                }, 300)
+            }
+
+            function onRejection(response) {
+                $scope.flashAlert('danger', "There is no category with " + code + ".");
+            }
+
 
         }
 
-        $scope.display=function (code){
-            // $location.assign("category/display/"+code);
-
-            $location.path("/category/display/"+code);
-            $location.$$search="";
+        $scope.display = function (code) {
+            $location.path("/category/display/" + code);
+            $location.$$search = "";
             $location.replace();
             $location.$$compose();
-
-            console.log($location.$$absUrl);
-            console.log($location.$$url);
-            // $location.path("#");
-            // $location.replace();
         }
 
-        $scope.add=function (){
-            dialogs.create('app/components/category/category.add.html', 'CategoryEditController', {
-                subject: 'subject'
+        $scope.add = function () {
+            isEdit = false;
+            dialogs.create('app/components/category/category.edit.html', 'CategoryEditController', {
+                isEditMode: isEdit
             }, {}, '').result.then(resolveCallback, rejectCallback);
 
             function resolveCallback() {
                 setTimeout(function () {
                     $scope.tableParams.reload()
-                    console.log("promise resolved,.3s")
-                },300)
+                    $scope.flashAlert('success', "Category successfully added")
+                }, 300)
             }
 
             function rejectCallback() {
-                setTimeout(function(){$scope.tableParams.reload()
-                        console.log("promise rejected,.3s")}
-                    ,300)
+                setTimeout(function () {
+                        $scope.tableParams.reload()
+                        $scope.flashAlert('danger', "Field to add category")
+                    }
+                    , 300)
 
             }
 
         }
 
         $scope.searchParams = $location.search();
-
         $scope.searchParams.orderBy == null || $scope.searchParams.orderBy == "" ? $scope.searchParams.orderBy = "subject" : $scope.searchParams.orderBy = $location.search().orderBy;
         $scope.searchParams.sortDirection == null || $scope.searchParams.sortDirection == "" ? $scope.searchParams.sortDirection = "asc" : $scope.searchParams.sortDirection = $location.search().sortDirection;
         $scope.searchParams.pageNumber == null || $scope.searchParams.pageNumber == "" ? $scope.searchParams.pageNumber = "1" : $scope.searchParams.pageNumber = $location.search().pageNumber;
-        // $scope.searchParams.pageSize==null || $scope.searchParams.pageSize==""?$scope.searchParams.pageSize="10":$scope.searchParams.pageSize=$location.search().pageSize;
-        if ($scope.searchParams.pageSize == "10" || $scope.searchParams.pageSize == "25" || $scope.searchParams.pageSize == "50" || $scope.searchParams.pageSize == "100") {
+
+        if (Object.hasOwn($scope.searchParams, 'pageSize') || $scope.searchParams.pageSize == "10" || $scope.searchParams.pageSize == "25" || $scope.searchParams.pageSize == "50" || $scope.searchParams.pageSize == "100") {
             $scope.searchParams.pageSize = $location.search().pageSize;
         } else {
             $scope.searchParams.pageSize = "10";
@@ -76,8 +101,19 @@ app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableP
 
 
         $scope.search = function () {
-            console.log($scope.searchParams);
-            $scope.tableParams.reload();
+            $scope.tableParams.reload().then(function (data) {
+                if ($scope.searchParams.subject == "" || $scope.searchParams.subject == null || $scope.searchParams.subject == undefined) {
+                    delete $scope.searchParams.subject;
+                    console.log("value after: " + $scope.searchParams.subject);
+                }
+                if ($scope.searchParams.code == "" || $scope.searchParams.code == null || $scope.searchParams.code == "") {
+                    delete $scope.searchParams.code;
+                }
+                console.log($scope.searchParams);
+                $location.$$compose();
+            }, function (error) {
+                $scope.flashAlert('danger', "Problem occurred while searching categories");
+            });
         }
 
         var sortingKey = $scope.searchParams.orderBy;
@@ -97,16 +133,21 @@ app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableP
                 getData: function ($defer, params) {
                     // console.log(params.$params)
                     //Extract searchParams used by back-end from internal parameters of ng-table
+
+                    params.$params.page=$location.$$search.pageNumber;
+                    params.$params.count=$location.$$search.pageSize;
+                    var myKey=Object.keys(params.$params.sorting)[0];
+                    // params.$params.sorting.myKey=$location.$$search.orderBy
+                    // Object.values(params.$params.sorting)[0]=$location.$$search.sortDirection;
+                    // params.$params.sorting.value=$location.$$search.orderBy
+                    debugger
                     $scope.searchParams.pageNumber = params.$params.page;
                     $scope.searchParams.pageSize = params.$params.count;
                     $scope.searchParams.orderBy = Object.keys(params.$params.sorting)[0];
                     $scope.searchParams.sortDirection = Object.values(params.$params.sorting)[0];
-
-
                     // Update the URL with the current table parameters
                     $location.$$search = $scope.searchParams;
                     $location.$$compose();
-
                     //Use category service to fetch data from back-end
                     CategoryService.search($scope.searchParams).$promise.then(onFulfillment, onRejection);
 
@@ -120,6 +161,8 @@ app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableP
 
                     function onRejection(reason) {
                         // Flash.create('danger', 'Problem occurred while searching categories')
+                        $scope.flashAlert('danger', "Problem occurred while searching categories")
+
                     }
                 }//end of getData
             }
@@ -128,12 +171,11 @@ app.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableP
 
     }])
 
-app.controller('categoryDisplayController', ['$scope', '$route', 'CategoryService', function ($scope, $route, CategoryService) {
+categoryModule.controller('categoryDisplayController', ['$scope', '$route', 'CategoryService', function ($scope, $route, CategoryService) {
     var code = $route.current.params.code;
     console.log(code);
     CategoryService.loadByCode({code: code}).$promise.then(onFulfillment, onRejection);
 
-    // $scope.searchParams=$location.search();
     function onFulfillment(searchResponse) {
         //Update internal parameters of ng-table after arrival of new data from back-end, total count of data is used for rendering pagination
         $scope.subject = searchResponse.subject;
@@ -143,42 +185,31 @@ app.controller('categoryDisplayController', ['$scope', '$route', 'CategoryServic
     function onRejection(reason) {
         // Flash.create('danger', 'Problem occurred while searching categories')
         $scope.code = searchResponse.code;
-        alert("nooooooo")
-
+        $scope.flashAlert('danger', "Problem occurred while searching categories")
     }
 }])
 
 
-app.controller('CategoryEditController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
+categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
     $scope.code = data.code;
+    $scope.isEditMode = data.isEditMode
     $scope.ok = function () {
+        if ($scope.isEditMode) {
             CategoryService.editSubject({code: $scope.code}, {subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
-            function onFulfillment() {
-                console.log("ok")
-            }
-            function onRejection() {
-                alert("nana")
-            }
-        $modalInstance.close({someImportantData: $scope.subject});
-    }
+        } else {
+            CategoryService.saveCategory({subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
+        }
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss();
-    }
-    // dialogs.create('app/components/category/category.edit.html','CategoryEditController',{data: topass,anotherVar: 'value'},{},'');
-
-}])
-
-app.controller('CategoryAddController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
-    $scope.ok = function () {
-        CategoryService.saveCategory(subject, {subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
         function onFulfillment() {
             console.log("ok")
+            $modalInstance.close({someImportantData: $scope.subject});
         }
+
         function onRejection() {
-            alert("nana")
+            console.log("sda")
         }
-        $modalInstance.close({someImportantData: $scope.subject});
+
+
     }
 
     $scope.cancel = function () {

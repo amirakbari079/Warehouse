@@ -1,9 +1,9 @@
 body {
     background: rgba(246, 246, 246, 0.8);
 }
-
 #container {
     margin-top: 4px !important;
+    margin-bottom: 60px;
     background: #FFF;
     border-radius: 10px !important;
     padding: 10px 30px;
@@ -24,8 +24,10 @@ table {
     box-shadow: 0px 8px 10px -10px rgba(0, 0, 0, 0.62);
 }
 
+
+
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: rgba(246, 246, 246, 0.96);
 }
 td{
     padding: 15px !important;
@@ -65,6 +67,13 @@ td{
     /*border: 2px solid #4c00ff;*/
     box-shadow: 1px -1px 10px 0px rgba(76, 0, 255, 0.39), 3px 3px 0px 0px rgba(76, 0, 255, 1);
 }
+.primery-btn:disabled{
+    color: #0f0f0f;
+    box-shadow: 1px -1px 10px 0px rgba(47, 47, 47, 0.39), 3px 3px 0px 0px rgb(20, 5, 45);
+}
+.primery-btn:disabled:hover{
+    transition: none;
+}
 
 .warn-btn {
     color: #ff8800;
@@ -102,3 +111,55 @@ td{
     color: #fff;
     border-radius: 6px 6px 0px 0px;
 }
+
+.divi{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ng-table-counts > button {
+    background: #c8c5d2 !important;
+    color: #0f0f0f !important;
+}
+.btn-default.active{
+    background: #36304a !important;
+    color: #fff !important;
+    outline: none;
+}
+
+.pagination{
+    margin: 0px !important;
+
+}
+.footer-wrapper{
+    margin-top: 10px !important;
+}
+
+ul>li>a{
+    background: #c8c5d2 !important;
+    color: #0f0f0f !important;
+}
+
+ul>li>a:focus{
+    background: #36304a !important;
+    color: #fff !important;
+    outline: none !important;
+}
+ul>li>a:active{
+    background: #36304a !important;
+    outline: none !important;
+}
+
+
+.pagination>.active>a{
+    background: #36304a !important;
+    color: #fff !important;
+    outline: none;
+}
+
+/*.form-wrapper{*/
+/*    border: 1px solid black;*/
+/*    padding: 20px;*/
+/*    border-radius: 7px;*/
+/*}*/
