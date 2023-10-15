@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Entity
@@ -20,5 +21,6 @@ public class CategoryEntity {
     private Long id;
     private String code = UUID.randomUUID().toString().substring(0, 5);
     private String subject;
+//    private ArrayList<BookEntity> books;
 
 }

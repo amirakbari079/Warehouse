@@ -1,6 +1,5 @@
 categoryModule.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableParams', '$location', '$timeout', 'dialogs', 'Flash',
     function ($scope, CategoryService, ngTableParams, $location, $timeout, dialogs, Flash) {
-        console.log("adawd")
         console.log($location)
         $scope.$on('$routeUpdate', function () {
             // Update the variable here
@@ -43,14 +42,14 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
         $scope.delete = function (code) {
             CategoryService.deleteCategory({'code': code}).$promise.then(onFulfillment, onRejection);
 
-            function onFulfillment(response) {
+            function onFulfillment() {
                 setTimeout(function () {
                     $scope.flashAlert('success', "Category with code: '" + code + "' removed successfully");
                     $scope.tableParams.reload();
                 }, 300)
             }
 
-            function onRejection(response) {
+            function onRejection() {
                 $scope.flashAlert('danger', "There is no category with " + code + ".");
             }
 
@@ -131,12 +130,14 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
 
             {
                 getData: function ($defer, params) {
-                    // console.log(params.$params)
+
                     //Extract searchParams used by back-end from internal parameters of ng-table
 
-                    params.$params.page=$location.$$search.pageNumber;
-                    params.$params.count=$location.$$search.pageSize;
-                    var myKey=Object.keys(params.$params.sorting)[0];
+                    params.$params.page = $location.$$search.pageNumber;
+                    params.$params.count = $location.$$search.pageSize;
+                    var myKey = $location.$$search.orderBy;
+                    var myValue = $location.$$search.sortDirection;
+                    var myobj={myKey:myValue}
                     // params.$params.sorting.myKey=$location.$$search.orderBy
                     // Object.values(params.$params.sorting)[0]=$location.$$search.sortDirection;
                     // params.$params.sorting.value=$location.$$search.orderBy
@@ -215,7 +216,6 @@ categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalIn
     $scope.cancel = function () {
         $modalInstance.dismiss();
     }
-    // dialogs.create('app/components/category/category.edit.html','CategoryEditController',{data: topass,anotherVar: 'value'},{},'');
 
 }])
 

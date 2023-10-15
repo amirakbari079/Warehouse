@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 
@@ -19,9 +20,16 @@ public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @NotNull
+    @Column(unique = true)
     private String isbn10;
+    @NotNull
+    @Column(unique = true)
     private String isbn13;
-    private int price;
+    @NotNull
+    private String price;
+    @NotNull
     private String title;
+
+//    private CategoryEntity category;
 }

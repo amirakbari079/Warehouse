@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 public class BookManager {
     @Autowired
     BookDao bookDao;
- public void save(BookEntity book){
+ public void save(BookEntity book) throws Exception {
      bookDao.save(book);
+ }
+
+ public BookEntity loadBook(String isbn13){
+    return bookDao.loadBook(isbn13);
  }
 }

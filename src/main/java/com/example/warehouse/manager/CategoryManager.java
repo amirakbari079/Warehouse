@@ -28,7 +28,6 @@ public class CategoryManager {
         CategoryEntity category = loadByCode(code);
         category.setSubject(subject);
         return category = categoryDao.update(category);
-        //TODO Handel the not-found exception
     }
 
     public void deleteCategory(String code) throws CustomException, CategoryNotFoundException {

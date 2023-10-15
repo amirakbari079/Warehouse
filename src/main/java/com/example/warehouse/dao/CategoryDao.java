@@ -45,9 +45,14 @@ public class CategoryDao {
     }
 
     @Transactional
-    public CategoryEntity update(CategoryEntity category) {
-        entityManager.merge(category);
-        return category;
+    public CategoryEntity update(CategoryEntity category) throws CategoryNotFoundException {
+        try{
+            entityManager.merge(category);
+            return category;
+        }catch (Exception e){
+            throw new CategoryNotFoundException();
+        }
+
 
     }
 
@@ -57,9 +62,8 @@ public class CategoryDao {
         try {
             entityManager.remove(category);
         } catch (NullPointerException nullPointerException) {
-           throw new CustomException();
+           throw new CategoryNotFoundException();
         }
-                //TODO Implementing Not Found Exception
     }
 
     @Transactional

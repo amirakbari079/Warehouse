@@ -5,6 +5,6 @@ public class NullFieldException extends Exception{
         super("Please fill necessary filed");
     }
     public NullFieldException(String field){
-        super(field+"is necessary field please fill it");
+        super(field+" is necessary field please fill it");
     }
 }
