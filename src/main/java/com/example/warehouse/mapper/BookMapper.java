@@ -28,25 +28,14 @@ public class BookMapper {
                 bookEntity.setIsbn13(bookDto.getIsbn13());
             else throw new CustomException("Isbn13 must be 13 character");
         } else throw new NullFieldException("Book Isbn13");
-        if (!StringUtil.isNullOrEmpty(bookDto.getTitle())) {
-            bookEntity.setTitle(bookDto.getTitle());
-        } else throw new NullFieldException("Book Title");
-        if (!StringUtil.isNullOrEmpty(bookDto.getPrice())) {
-            try {
-                Integer num = Integer.parseInt(bookDto.getPrice().substring(1, bookDto.getPrice().length()));
-                if (num < 0 || num == 0)
-                    throw new NumberFormatException();
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid Number: " + bookDto.getPrice());
-            }
-            bookEntity.setPrice(bookDto.getPrice());
-        } else throw new NullFieldException("Book Price");
+        bookEntity.setTitle(bookDto.getTitle());
+        bookEntity.setPrice(bookDto.getPrice());
         return bookEntity;
 
     }
 
-    public BookDto toDto(BookEntity bookEntity){
-        BookDto bookDto=new BookDto();
+    public BookDto toDto(BookEntity bookEntity) {
+        BookDto bookDto = new BookDto();
         bookDto.setIsbn10(bookEntity.getIsbn10());
         bookDto.setIsbn13(bookEntity.getIsbn13());
         bookDto.setTitle(bookEntity.getTitle());

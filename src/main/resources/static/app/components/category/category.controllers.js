@@ -133,11 +133,11 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
 
                     //Extract searchParams used by back-end from internal parameters of ng-table
 
-                    params.$params.page = $location.$$search.pageNumber;
-                    params.$params.count = $location.$$search.pageSize;
-                    var myKey = $location.$$search.orderBy;
-                    var myValue = $location.$$search.sortDirection;
-                    var myobj={myKey:myValue}
+                    // params.$params.page = $location.$$search.pageNumber;
+                    // params.$params.count = $location.$$search.pageSize;
+                    // var myKey = $location.$$search.orderBy;
+                    // var myValue = $location.$$search.sortDirection;
+                    // var myobj={myKey:myValue}
                     // params.$params.sorting.myKey=$location.$$search.orderBy
                     // Object.values(params.$params.sorting)[0]=$location.$$search.sortDirection;
                     // params.$params.sorting.value=$location.$$search.orderBy
