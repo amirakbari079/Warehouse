@@ -61,17 +61,17 @@ td{
 
 }
 
-.primery-btn {
+.primary-btn {
     color: #4c00ff;
     /*background: #e9daff;*/
     /*border: 2px solid #4c00ff;*/
     box-shadow: 1px -1px 10px 0px rgba(76, 0, 255, 0.39), 3px 3px 0px 0px rgba(76, 0, 255, 1);
 }
-.primery-btn:disabled{
+.primary-btn:disabled{
     color: #0f0f0f;
     box-shadow: 1px -1px 10px 0px rgba(47, 47, 47, 0.39), 3px 3px 0px 0px rgb(20, 5, 45);
 }
-.primery-btn:disabled:hover{
+.primary-btn:disabled:hover{
     transition: none;
 }
 

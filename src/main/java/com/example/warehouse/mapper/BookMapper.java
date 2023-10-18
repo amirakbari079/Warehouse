@@ -1,6 +1,4 @@
 package com.example.warehouse.mapper;
-
-
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NullFieldException;
 import com.example.warehouse.dto.BookDto;
@@ -9,12 +7,12 @@ import com.example.warehouse.manager.BookManager;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 @Component
 public class BookMapper {
     @Autowired
     BookManager bookmanager;
+    @Autowired
+    CategoryMapper categoryMapper;
 
     public BookEntity mapper(BookDto bookDto) throws NullFieldException, CustomException {
         BookEntity bookEntity = new BookEntity();
@@ -30,6 +28,7 @@ public class BookMapper {
         } else throw new NullFieldException("Book Isbn13");
         bookEntity.setTitle(bookDto.getTitle());
         bookEntity.setPrice(bookDto.getPrice());
+        bookEntity.setCategories(categoryMapper.categoryListDtoToEntity(bookDto.getCategories()));
         return bookEntity;
 
     }

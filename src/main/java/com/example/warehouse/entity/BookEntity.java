@@ -1,18 +1,15 @@
 package com.example.warehouse.entity;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "WH_Book")
@@ -30,6 +27,6 @@ public class BookEntity {
     private String price;
     @NotNull
     private String title;
-
-//    private CategoryEntity category;
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    private List<CategoryEntity> categories;
 }

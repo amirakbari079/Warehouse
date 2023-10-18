@@ -194,7 +194,9 @@ categoryModule.controller('categoryDisplayController', ['$scope', '$route', 'Cat
 categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
     $scope.code = data.code;
     $scope.isEditMode = data.isEditMode
+    $scope.disableBtn=false;
     $scope.ok = function () {
+        $scope.disableBtn=true;
         if ($scope.isEditMode) {
             CategoryService.editSubject({code: $scope.code}, {subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
         } else {

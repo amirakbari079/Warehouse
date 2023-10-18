@@ -1,18 +1,13 @@
 package com.example.warehouse.dao;
-
 import com.example.warehouse.Exception.CategoryNotFoundException;
 import com.example.warehouse.Exception.CustomException;
-import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 @Slf4j
@@ -23,33 +18,46 @@ public class CategoryDao {
 
     @Transactional
     public CategoryEntity save(CategoryEntity category) {
+
         entityManager.persist(category);
-        String queryString="select c from CategoryEntity c where c.subject = :subject";
-        TypedQuery<CategoryEntity> typedQuery=entityManager.createQuery(queryString,CategoryEntity.class);
-        typedQuery.setParameter("subject",category.getSubject());
+        String queryString = "select c from CategoryEntity c where c.subject = :subject";
+        TypedQuery<CategoryEntity> typedQuery = entityManager.createQuery(queryString, CategoryEntity.class);
+        typedQuery.setParameter("subject", category.getSubject());
         return typedQuery.getSingleResult();
-//        log.info("category is saved to database. {}", category);
     }
 
     @Transactional
-    public CategoryEntity loadByCode(String code) throws CategoryNotFoundException{
+    public CategoryEntity loadByCode(String code) throws CategoryNotFoundException {
         try {
             String queryString = "select c from CategoryEntity c where c.code = :code";
             TypedQuery<CategoryEntity> typedQuery = entityManager.createQuery(queryString, CategoryEntity.class);
             typedQuery.setParameter("code", code);
             return typedQuery.getSingleResult();
-        }catch (Exception e){
-           throw new CategoryNotFoundException();
+        } catch (Exception e) {
+            throw new CategoryNotFoundException();
+        }
+
+    }
+
+    @Transactional
+    public CategoryEntity loadBySubject(String subject) throws CategoryNotFoundException {
+        try {
+            String queryString = "select c from CategoryEntity c where c.subject = :subject";
+            TypedQuery<CategoryEntity> typedQuery = entityManager.createQuery(queryString, CategoryEntity.class);
+            typedQuery.setParameter("subject", subject);
+            return typedQuery.getSingleResult();
+        } catch (Exception e) {
+            throw new CategoryNotFoundException();
         }
 
     }
 
     @Transactional
     public CategoryEntity update(CategoryEntity category) throws CategoryNotFoundException {
-        try{
+        try {
             entityManager.merge(category);
             return category;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CategoryNotFoundException();
         }
 
@@ -62,20 +70,20 @@ public class CategoryDao {
         try {
             entityManager.remove(category);
         } catch (NullPointerException nullPointerException) {
-           throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException();
         }
     }
 
     @Transactional
-    public List<CategoryEntity> search(String subject, String code, String oderBy, String sortDirction) {
-        String conditioinQuery = "";
+    public List<CategoryEntity> search(String subject, String code, String oderBy, String sortDirection) {
+        String conditionQuery = "";
         if (code != null && !code.isEmpty()) {
-            conditioinQuery = " AND e.code= :code";
+            conditionQuery = " AND e.code= :code";
         }
         if (subject != null && !subject.isEmpty()) {
-            conditioinQuery += " AND e.subject LIKE :subject";
+            conditionQuery += " AND e.subject LIKE :subject";
         }
-        String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1" + conditioinQuery + " ORDER BY " + oderBy.toLowerCase() + " " + sortDirction;
+        String queryString = "SELECT e FROM CategoryEntity e WHERE 1=1" + conditionQuery + " ORDER BY " + oderBy.toLowerCase() + " " + sortDirection;
         TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
         if (code != null && !code.isEmpty()) {
             query.setParameter("code", code);
@@ -87,17 +95,6 @@ public class CategoryDao {
         return CategoryEntityList;
 
     }
-
-
-//    @Transactional
-//    public List<CategoryEntity> search(String subject,String code) {
-//        String queryString = "SELECT e FROM CategoryEntity e WHERE e.subject LIKE :fieldValue";
-//        TypedQuery<CategoryEntity> query = entityManager.createQuery(queryString, CategoryEntity.class);
-//        query.setParameter("fieldValue", "%" + subject + "%");
-//        List<CategoryEntity> CategoryEntityList = query.getResultList();
-//        return CategoryEntityList;
-//    }
-
 }
 
 

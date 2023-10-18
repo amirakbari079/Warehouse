@@ -12,8 +12,7 @@ public class ItBooksProxy {
                 .uri("https://api.itbook.store/1.0/books/" + isbn13)
                 .exchange()
                 .block();
-        ItBookResponseDto responseDto = response.bodyToMono(ItBookResponseDto.class).block();
-        return responseDto;
+        return  response.bodyToMono(ItBookResponseDto.class).block();
 
     }
 

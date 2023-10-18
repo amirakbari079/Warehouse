@@ -37,4 +37,11 @@ public class CategoryMapper {
         categoryDtoPage.setPageSize(pageSize);
         return categoryDtoPage;
     }
+    public List<CategoryEntity> categoryListDtoToEntity(List<CategoryDto> categoryDto) {
+        List<CategoryEntity> categoryEntitiesList = new ArrayList<>();
+        for (CategoryDto dto : categoryDto) {
+            categoryEntitiesList.add(toEntity(dto));
+        }
+        return categoryEntitiesList;
+    }
 }

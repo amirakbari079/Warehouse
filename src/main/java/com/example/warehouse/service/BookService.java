@@ -1,18 +1,17 @@
 package com.example.warehouse.service;
-
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NotFoundException;
 import com.example.warehouse.Exception.NullFieldException;
 import com.example.warehouse.dto.BookDto;
+import com.example.warehouse.dto.CategoryDto;
 import com.example.warehouse.manager.BookManager;
-import com.example.warehouse.manager.ItBooksProxy;
 import com.example.warehouse.mapper.BookMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/book")
 @Slf4j
@@ -54,7 +53,7 @@ public class BookService {
     public Response deleteBook(@PathParam("isbn13") String isbn13) {
         try {
             bookmanager.deleteBook(isbn13);
-            return Response.ok().build();
+            return Response.ok("Book Deleted.✅").build();
         } catch (Exception e) {
             return Response.status(404, "There is no book with this isbn13").build();
         }
@@ -63,11 +62,10 @@ public class BookService {
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response search(@QueryParam("isbn10") String subject,
-                           @QueryParam("isbn13") String code,
-                           @QueryParam("price") Integer pageSize,
-                           @QueryParam("title") Integer pageNumber
-    ) {
+    public Response search(@QueryParam("title") String title,
+                           @QueryParam("price") Integer price
+//                           @QueryParam("categories")List<CategoryDto> categoryDtoList
+                           ) {
         return null;
     }
 }

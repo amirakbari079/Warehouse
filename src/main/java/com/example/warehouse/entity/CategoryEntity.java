@@ -1,26 +1,24 @@
 package com.example.warehouse.entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "WH_Category")
 public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String code = UUID.randomUUID().toString().substring(0, 5);
+    private String code;
     private String subject;
-//    private ArrayList<BookEntity> books;
+    @ManyToMany(mappedBy = "categories")
+    private List<BookEntity> books;
 
 }

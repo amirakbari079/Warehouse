@@ -1,23 +1,27 @@
 package com.example.warehouse.manager;
-
+import com.example.warehouse.Exception.CategoryNotFoundException;
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NotFoundException;
 import com.example.warehouse.dao.BookDao;
 import com.example.warehouse.dto.ItBookResponseDto;
 import com.example.warehouse.entity.BookEntity;
-
-
+import com.example.warehouse.entity.CategoryEntity;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @Component
 public class BookManager {
     @Autowired
     BookDao bookDao;
-
+    @Autowired
+    CategoryManager categoryManager;
     ItBooksProxy itBooksProxy = new ItBooksProxy();
 
+
+    @Transactional
     public void save(BookEntity book) throws IllegalArgumentException, CustomException, NotFoundException {
         ISBNValidator validator = new ISBNValidator();
         if (!validator.isValidISBN13(book.getIsbn13())) {
@@ -37,13 +41,20 @@ public class BookManager {
                     throw new NotFoundException("there is no book with this isbn13");
                 }
             }
+            ArrayList<CategoryEntity> newCategory = new ArrayList<>();
+            book.getCategories().forEach(n -> {
+                try {
+                    newCategory.add(categoryManager.loadBySubject(n.getSubject()));
+                } catch (CategoryNotFoundException e) {
+                    newCategory.add(categoryManager.createCategory(n.getSubject()));
+                }
+            });
+            book.setCategories(newCategory);
             bookDao.save(book);
         } catch (CustomException e) {
             throw new CustomException("There is another book in Database with this Isbn10/Isbn13");
         }
-
     }
-
 
     public BookEntity loadBook(String isbn13) throws Exception {
         return bookDao.loadBook(isbn13);
