@@ -4,6 +4,7 @@ import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.dao.CategoryDao;
 import com.example.warehouse.dto.CategorySearchParamsDto;
 import com.example.warehouse.entity.CategoryEntity;
+import com.example.warehouse.mapper.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -14,6 +15,9 @@ public class CategoryManager {
 
     @Autowired
     CategoryDao categoryDao;
+
+    @Autowired
+    CategoryMapper categoryMapper;
 
     public CategoryEntity save(CategoryEntity category) {
         category.setCode(UUID.randomUUID().toString().substring(0, 5));
@@ -48,4 +52,6 @@ public class CategoryManager {
     public CategoryEntity createCategory(String subject){
         return CategoryEntity.builder().subject(subject).code(UUID.randomUUID().toString().substring(0, 5)).build();
     }
+
+
 }

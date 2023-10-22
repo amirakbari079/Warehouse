@@ -1,13 +1,16 @@
 package com.example.warehouse.service;
+
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NotFoundException;
 import com.example.warehouse.Exception.NullFieldException;
 import com.example.warehouse.dto.BookDto;
-import com.example.warehouse.dto.CategoryDto;
+import com.example.warehouse.dto.BookDtoPage;
+import com.example.warehouse.entity.BookEntity;
 import com.example.warehouse.manager.BookManager;
 import com.example.warehouse.mapper.BookMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,7 +47,11 @@ public class BookService {
     @Path("loadBook/{isbn13}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response loadBook(@PathParam("isbn13") String isbn13) throws Exception {
-        return Response.ok(bookmapper.toDto(bookmanager.loadBook(isbn13))).build();
+        try {
+            return Response.ok(bookmapper.toDto(bookmanager.loadBook(isbn13))).build();
+        } catch (Exception e) {
+            return Response.status(404, "There is no book with this isbn13").build();
+        }
     }
 
     @DELETE
@@ -63,9 +70,28 @@ public class BookService {
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@QueryParam("title") String title,
-                           @QueryParam("price") Integer price
-//                           @QueryParam("categories")List<CategoryDto> categoryDtoList
-                           ) {
-        return null;
+                           @QueryParam("price") String price,
+                           @QueryParam("category") String categoryCode
+    ) {
+        BookDtoPage bookDtoPage =null;
+
+        bookDtoPage=bookmanager.searchBook(title, price, categoryCode);
+
+        return Response.ok().entity(bookDtoPage).build();
+    }
+
+    @PATCH
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@QueryParam("isbn13") String isbn13, @QueryParam("isbn10") String isbn10, @QueryParam("title") String title, @QueryParam("price") String price) throws Exception {
+        if (isbn13 == null || isbn10 == null || title == null || price == null) {
+            return Response.status(400, "all fields are necessary pleas fill all of them ❗").build();
+        }
+        try {
+            bookmanager.updateBook(isbn13, isbn10, title, "$" + price);
+            return Response.ok("Category Updated").build();
+        } catch (Exception e) {
+            return Response.status(404, "book not found ❗").build();
+        }
     }
 }

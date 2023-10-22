@@ -99,7 +99,7 @@ public class CategoryService {
             if (pageNumber == null)
                 throw new InvalidValueFieldException("pageNumber");
             CategorySearchParamsDto searchParamsDto = new CategorySearchParamsDto(subject, code, pageSize, pageNumber, orderBy, sortDirection);
-            return Response.ok().entity(categoryMapper.categoryListEntityToDto(categoryManager.searchCategory(searchParamsDto), pageSize, pageNumber)).build();
+            return Response.ok().entity(categoryMapper.categoryListEntityToDtoPage(categoryManager.searchCategory(searchParamsDto), pageSize, pageNumber)).build();
         } catch (InvalidValueFieldException e) {
             return Response.status(400, e.getMessage()).build();
         }

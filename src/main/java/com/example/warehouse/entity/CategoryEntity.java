@@ -18,7 +18,11 @@ public class CategoryEntity {
     private Long id;
     private String code;
     private String subject;
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "categories")
     private List<BookEntity> books;
+
+//    public String toString() {
+//        return "BookEntity [subject=" + subject + "]";
+//    }
 
 }

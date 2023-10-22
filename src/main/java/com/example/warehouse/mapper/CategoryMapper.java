@@ -25,7 +25,7 @@ public class CategoryMapper {
     }
 
 
-    public CategoryDtoPage categoryListEntityToDto(List<CategoryEntity> categoryEntity,Integer pageNumber,Integer pageSize) {
+    public CategoryDtoPage categoryListEntityToDtoPage(List<CategoryEntity> categoryEntity, Integer pageNumber, Integer pageSize) {
         CategoryDtoPage categoryDtoPage = new CategoryDtoPage();
         List<CategoryDto> categoryDtoList = new ArrayList<>();
         for (int i = 0; i < categoryEntity.size(); i++) {
@@ -37,6 +37,16 @@ public class CategoryMapper {
         categoryDtoPage.setPageSize(pageSize);
         return categoryDtoPage;
     }
+
+
+    public List<CategoryDto> categoryListEntityToDto(List<CategoryEntity> categoryEntity) {
+        List<CategoryDto> categoryDtoList = new ArrayList<>();
+        for (int i = 0; i < categoryEntity.size(); i++) {
+            categoryDtoList.add(toDto(categoryEntity.get(i)));
+        }
+        return categoryDtoList;
+    }
+
     public List<CategoryEntity> categoryListDtoToEntity(List<CategoryDto> categoryDto) {
         List<CategoryEntity> categoryEntitiesList = new ArrayList<>();
         for (CategoryDto dto : categoryDto) {
@@ -44,4 +54,6 @@ public class CategoryMapper {
         }
         return categoryEntitiesList;
     }
+
+
 }
