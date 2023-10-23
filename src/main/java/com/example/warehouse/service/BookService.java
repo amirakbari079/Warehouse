@@ -30,14 +30,12 @@ public class BookService {
     public Response saveBook(BookDto bookDto) {
         try {
             bookmanager.save(bookmapper.mapper(bookDto));
-        } catch (NullFieldException e) {
-            return Response.status(422, e.getMessage()).build();
-        } catch (IllegalArgumentException e) {
+        } catch (NullFieldException | CustomException | IllegalArgumentException e) {
             return Response.status(422, e.getMessage()).build();
         } catch (NotFoundException e) {
             return Response.status(404, e.getMessage()).build();
-        } catch (CustomException e) {
-            return Response.status(422, e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(422, "There is another book in Database with this Isbn10/Isbn13").build();
         }
         return Response.status(201, "Book saved ✅").build();
     }
@@ -46,7 +44,7 @@ public class BookService {
     @GET
     @Path("loadBook/{isbn13}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loadBook(@PathParam("isbn13") String isbn13) throws Exception {
+    public Response loadBook(@PathParam("isbn13") String isbn13){
         try {
             return Response.ok(bookmapper.toDto(bookmanager.loadBook(isbn13))).build();
         } catch (Exception e) {
@@ -71,13 +69,14 @@ public class BookService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@QueryParam("title") String title,
                            @QueryParam("price") String price,
-                           @QueryParam("category") String categoryCode
+                           @QueryParam("categoryCode") String categoryCode
     ) {
-        BookDtoPage bookDtoPage =null;
-
-        bookDtoPage=bookmanager.searchBook(title, price, categoryCode);
-
-        return Response.ok().entity(bookDtoPage).build();
+        try {
+            BookDtoPage bookDtoPage = bookmanager.searchBook(title, price, categoryCode);
+            return Response.ok().entity(bookDtoPage).build();
+        } catch (NotFoundException e) {
+            return Response.status(404, e.getMessage()).build();
+        }
     }
 
     @PATCH

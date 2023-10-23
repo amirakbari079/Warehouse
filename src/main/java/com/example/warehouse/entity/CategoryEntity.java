@@ -21,8 +21,8 @@ public class CategoryEntity {
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "categories")
     private List<BookEntity> books;
 
-//    public String toString() {
-//        return "BookEntity [subject=" + subject + "]";
-//    }
-
+    @Override
+    public String toString() {
+        return "CategoryEntity.CategoryEntityBuilder(id=" + this.id + ", code=" + this.code + ", subject=" + this.subject + ")";
+    }
 }

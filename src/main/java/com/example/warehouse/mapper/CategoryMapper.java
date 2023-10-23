@@ -12,10 +12,9 @@ import java.util.List;
 public class CategoryMapper {
     public CategoryEntity toEntity(CategoryDto categoryDto) {
         CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setSubject(categoryDto.getSubject().trim());
+        categoryEntity.setSubject(categoryDto.getSubject());
         return categoryEntity;
     }
-
 
     public CategoryDto toDto(CategoryEntity categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
@@ -41,8 +40,8 @@ public class CategoryMapper {
 
     public List<CategoryDto> categoryListEntityToDto(List<CategoryEntity> categoryEntity) {
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        for (int i = 0; i < categoryEntity.size(); i++) {
-            categoryDtoList.add(toDto(categoryEntity.get(i)));
+        for (CategoryEntity entity : categoryEntity) {
+            categoryDtoList.add(toDto(entity));
         }
         return categoryDtoList;
     }

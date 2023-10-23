@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,37 +30,51 @@ public class BookManager {
 
     @Transactional
     public void save(BookEntity book) throws IllegalArgumentException, CustomException, NotFoundException {
-        ISBNValidator validator = new ISBNValidator();
-//        if (!validator.isValidISBN13(book.getIsbn13())) {
-//            throw new IllegalArgumentException("isbn13 is not valid");
-//        }
-//        if (!validator.isValidISBN10(book.getIsbn10())) {
-//            throw new IllegalArgumentException("isbn10 is not valid");
-//        }
-        try {
+//        isbnValidator(book);
             if (book.getTitle() == null || book.getPrice() == null) {
                 try {
-                    ItBookResponseDto booksProxy;
-                    booksProxy = itBooksProxy.getBookDataFromApi(book.getIsbn13());
-                    book.setTitle(booksProxy.getTitle());
-                    book.setPrice(booksProxy.getPrice());
-                } catch (Exception e) {
-                    throw new NotFoundException("there is no book with this isbn13");
+                    book=fillNullFields(book);
+                } catch (NotFoundException e) {
+                    throw new NotFoundException(e.getMessage());
                 }
             }
-            ArrayList<CategoryEntity> newCategory = new ArrayList<>();
-            book.getCategories().forEach(n -> {
-                try {
-                    newCategory.add(categoryManager.loadBySubject(n.getSubject()));
-                } catch (CategoryNotFoundException e) {
-                    newCategory.add(categoryManager.createCategory(n.getSubject()));
-                }
-            });
-            book.setCategories(newCategory);
+            book=setBookCategories(book);
             bookDao.save(book);
-        } catch (CustomException e) {
-            throw new CustomException("There is another book in Database with this Isbn10/Isbn13");
+    }
+
+    public void isbnValidator(BookEntity book){
+        ISBNValidator validator = new ISBNValidator();
+        if (!validator.isValidISBN13(book.getIsbn13())) {
+            throw new IllegalArgumentException("isbn13 is not valid");
         }
+        if (!validator.isValidISBN10(book.getIsbn10())) {
+            throw new IllegalArgumentException("isbn10 is not valid");
+        }
+    }
+
+    public BookEntity fillNullFields(BookEntity book) throws NotFoundException {
+        try {
+            ItBookResponseDto booksProxy;
+            booksProxy = itBooksProxy.getBookDataFromApi(book.getIsbn13());
+            book.setTitle(booksProxy.getTitle());
+            book.setPrice(booksProxy.getPrice());
+            return book;
+        } catch (Exception e) {
+            throw new NotFoundException("there is no book with this isbn13");
+        }
+    }
+
+    public BookEntity setBookCategories(BookEntity book){
+        ArrayList<CategoryEntity> newCategory = new ArrayList<>();
+        book.getCategories().forEach(n -> {
+            try {
+                newCategory.add(categoryManager.loadBySubject(n.getSubject()));
+            } catch (CategoryNotFoundException e) {
+                newCategory.add(categoryManager.createCategory(n.getSubject()));
+            }
+        });
+        book.setCategories(newCategory);
+        return book;
     }
 
     public BookEntity loadBook(String isbn13) throws Exception {
@@ -69,6 +84,7 @@ public class BookManager {
             throw new Exception();
         }
     }
+
 
     public void deleteBook(String isbn13) throws Exception {
         try {
@@ -80,10 +96,13 @@ public class BookManager {
 
     @Autowired
     BookMapper bookMapper;
+
     @Transactional
-    public BookDtoPage searchBook(String title, String price, String categoryCode) {
-//        List<BookDto> books;
-        List<BookEntity> books=bookDao.searchBook(title, price, categoryCode);
+    public BookDtoPage searchBook(String title, String price, String categoryCode) throws NotFoundException {
+        List<BookEntity> books = bookDao.searchBook(title, price, categoryCode);
+        if (books.size() == 0) {
+            throw new NotFoundException("There is no book with this praperties");
+        }
         return bookMapper.toDtoPage(books);
     }
 

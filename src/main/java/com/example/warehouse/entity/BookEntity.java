@@ -1,8 +1,10 @@
 package com.example.warehouse.entity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -28,9 +30,13 @@ public class BookEntity {
     private String price;
     @NotNull
     private String title;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<CategoryEntity> categories;
 
+    @Override
+    public String toString() {
+        return "BookEntity(id=" + this.getId() + ", isbn10=" + this.getIsbn10() + ", isbn13=" + this.getIsbn13() + ", price=" + this.getPrice() + ", title=" + this.getTitle() + ")";
+    }
 }
 
 

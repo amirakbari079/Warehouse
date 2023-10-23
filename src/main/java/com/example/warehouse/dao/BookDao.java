@@ -1,11 +1,7 @@
 package com.example.warehouse.dao;
-
-import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.entity.BookEntity;
-import com.example.warehouse.entity.CategoryEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -19,13 +15,8 @@ public class BookDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void save(BookEntity book) throws CustomException {
-        try {
+    public void save(BookEntity book) {
             entityManager.persist(book);
-            log.info("book is saved to database. {}", book);
-        } catch (Exception e) {
-            throw new CustomException();
-        }
     }
 
     @Transactional
@@ -52,8 +43,6 @@ public class BookDao {
     }
 
     public List<BookEntity> searchBook(String title, String price, String categoryCode) {
-        CategoryEntity temp = new CategoryEntity();
-        temp.setCode("4eefc");
         String conditionQuery = "";
         String queryString = "SELECT e FROM BookEntity e Where 1=1 ";
         if (title != null && !title.isEmpty()) {
@@ -74,7 +63,7 @@ public class BookDao {
             query.setParameter("price", price);
         }
         if (categoryCode != null && !categoryCode.isEmpty()) {
-            query.setParameter("code", temp.getCode());
+            query.setParameter("code", categoryCode);
         }
         List<BookEntity> books = query.getResultList();
         return books;

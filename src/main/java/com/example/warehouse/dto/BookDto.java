@@ -10,9 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookDto {
+    private String title;
+    private String price;
     private String isbn10;
     private String isbn13;
-    private String price;
-    private String title;
     private List<CategoryDto> categories;
 }

@@ -1,9 +1,9 @@
 categoryModule.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableParams', '$location', '$timeout', 'dialogs', 'Flash',
     function ($scope, CategoryService, ngTableParams, $location, $timeout, dialogs, Flash) {
+
         console.log($location)
         $scope.$on('$routeUpdate', function () {
             // Update the variable here
-            console.log("O-------------OO")
             debugger
             $scope.tableParams.reload();
 

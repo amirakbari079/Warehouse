@@ -73,6 +73,7 @@ td{
 }
 .primary-btn:disabled:hover{
     transition: none;
+    cursor: not-allowed;
 }
 
 .warn-btn {

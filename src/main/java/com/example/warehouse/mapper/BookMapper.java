@@ -1,25 +1,20 @@
 package com.example.warehouse.mapper;
-
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NullFieldException;
 import com.example.warehouse.dto.BookDto;
 import com.example.warehouse.dto.BookDtoPage;
 import com.example.warehouse.dto.CategoryDto;
 import com.example.warehouse.entity.BookEntity;
-import com.example.warehouse.manager.BookManager;
+import com.example.warehouse.entity.CategoryEntity;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class BookMapper {
-    @Lazy
-    @Autowired
-    BookManager bookmanager;
 
     @Autowired
     CategoryMapper categoryMapper;
@@ -53,32 +48,26 @@ public class BookMapper {
         return bookDto;
     }
 
-
     public BookDtoPage toDtoPage(List<BookEntity> bookEntityList) {
         BookDto bookDto = new BookDto();
         BookDtoPage bookDtoPage = new BookDtoPage();
-        List<BookDto> bookDtoList=new ArrayList<>();
-        for (BookEntity book:bookEntityList){
+        List<BookDto> bookDtoList = new ArrayList<>();
+        for (BookEntity book : bookEntityList) {
             bookDto.setIsbn10(book.getIsbn10());
             bookDto.setIsbn13(book.getIsbn13());
             bookDto.setTitle(book.getTitle());
             bookDto.setPrice(book.getPrice());
-            bookDto.setCategories(book.getCategories());
+            List<CategoryDto> categoryDtoList = new ArrayList<>();
+            for (CategoryEntity category : book.getCategories()) {
+                categoryDtoList.add(categoryMapper.toDto(category));
+            }
+            bookDto.setCategories(categoryDtoList);
             bookDtoList.add(bookDto);
         }
         bookDtoPage.setItems(bookDtoList);
-
+        bookDtoPage.setTotalCount((long) bookDtoList.size());
         return bookDtoPage;
     }
-
-    public List<BookEntity> editBookEntity(List<BookEntity> bookList){
-        List<BookEntity> books=new ArrayList;
-        for (BookEntity book:bookList){
-            book.setCategories(book.getCategories().toString());
-        }
-
-    }
-
 
     public List<BookDto> entityToDtoList(List<BookEntity> bookEntities) {
         List<BookDto> books = new ArrayList<>();
@@ -87,12 +76,4 @@ public class BookMapper {
         }
         return books;
     }
-
-//    public BookDtoPage entityToDtoPage(List<BookEntity> bookEntities) {
-//        List<BookDto> books=new ArrayList<>();
-//        bookEntities.forEach(n->books.);
-////        books.set
-//    }
-
-
 }
