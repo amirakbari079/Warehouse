@@ -28,15 +28,12 @@ public class CategoryService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{code}")
     public Response CategoryGetRequest(@PathParam("code") String code) {
-        CategoryEntity category = null;
         try {
-            category = categoryManager.loadByCode(code);
+            CategoryEntity category = categoryManager.loadByCode(code);
             return Response.ok(categoryMapper.toDto(category)).build();
         } catch (CategoryNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         }
-
-        //TODO Implementing Not Found Exception
     }
 
     @POST

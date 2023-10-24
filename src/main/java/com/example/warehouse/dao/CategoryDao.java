@@ -91,8 +91,7 @@ public class CategoryDao {
         if (subject != null && !subject.isEmpty()) {
             query.setParameter("subject", "%" + subject + "%");
         }
-        List<CategoryEntity> CategoryEntityList = query.getResultList();
-        return CategoryEntityList;
+        return query.getResultList();
 
     }
 }

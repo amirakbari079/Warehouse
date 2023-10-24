@@ -1,6 +1,4 @@
 package com.example.warehouse.dto;
-
-import com.example.warehouse.manager.SortDirection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,10 +1,8 @@
 package com.example.warehouse.manager;
-
 import com.example.warehouse.Exception.CategoryNotFoundException;
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NotFoundException;
 import com.example.warehouse.dao.BookDao;
-import com.example.warehouse.dto.BookDto;
 import com.example.warehouse.dto.BookDtoPage;
 import com.example.warehouse.dto.ItBookResponseDto;
 import com.example.warehouse.entity.BookEntity;
@@ -13,9 +11,7 @@ import com.example.warehouse.mapper.BookMapper;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +97,7 @@ public class BookManager {
     public BookDtoPage searchBook(String title, String price, String categoryCode) throws NotFoundException {
         List<BookEntity> books = bookDao.searchBook(title, price, categoryCode);
         if (books.size() == 0) {
-            throw new NotFoundException("There is no book with this praperties");
+            throw new NotFoundException("There is no book with this properties");
         }
         return bookMapper.toDtoPage(books);
     }

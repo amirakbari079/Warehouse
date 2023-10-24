@@ -1,20 +1,16 @@
 package com.example.warehouse.service;
-
 import com.example.warehouse.Exception.CustomException;
 import com.example.warehouse.Exception.NotFoundException;
 import com.example.warehouse.Exception.NullFieldException;
 import com.example.warehouse.dto.BookDto;
 import com.example.warehouse.dto.BookDtoPage;
-import com.example.warehouse.entity.BookEntity;
 import com.example.warehouse.manager.BookManager;
 import com.example.warehouse.mapper.BookMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/book")
 @Slf4j

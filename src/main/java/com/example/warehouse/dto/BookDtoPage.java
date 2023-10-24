@@ -1,8 +1,6 @@
 package com.example.warehouse.dto;
-
-import com.example.warehouse.entity.BookEntity;
-import lombok.Data;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class BookDtoPage {

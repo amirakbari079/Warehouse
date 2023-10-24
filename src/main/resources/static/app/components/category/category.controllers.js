@@ -1,21 +1,34 @@
 categoryModule.controller('CategoryListController', ['$scope', 'CategoryService', 'ngTableParams', '$location', '$timeout', 'dialogs', 'Flash',
     function ($scope, CategoryService, ngTableParams, $location, $timeout, dialogs, Flash) {
+        let urlChanged = false;
+        dataInit = function () {
+            $scope.searchParams = $location.search();
+            $scope.searchParams.orderBy == null || $scope.searchParams.orderBy == "" ? $scope.searchParams.orderBy = "subject" : $scope.searchParams.orderBy = $location.search().orderBy;
+            $scope.searchParams.sortDirection == null || $scope.searchParams.sortDirection == "" ? $scope.searchParams.sortDirection = "asc" : $scope.searchParams.sortDirection = $location.search().sortDirection;
+            $scope.searchParams.pageNumber == null || $scope.searchParams.pageNumber == "" ? $scope.searchParams.pageNumber = "1" : $scope.searchParams.pageNumber = $location.search().pageNumber;
+            if (Object.hasOwn($scope.searchParams, 'pageSize') && $scope.searchParams.pageSize == "10" || $scope.searchParams.pageSize == "25" || $scope.searchParams.pageSize == "50" || $scope.searchParams.pageSize == "100") {
+                $scope.searchParams.pageSize = $location.search().pageSize;
+            } else {
+                $scope.searchParams.pageSize = "10";
+            }
+        }
+        dataInit();
 
-        console.log($location)
+
         $scope.$on('$routeUpdate', function () {
-            // Update the variable here
-            debugger
+            dataInit();
+            urlChanged = true;
             $scope.tableParams.reload();
-
+            urlChanged = false;
         });
 
         $scope.flashAlert = function (type, message) {
             Flash.create(type, message, 2500, {class: 'custom-class', id: 'custom-id'}, true);
         }
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Enter")
-                $scope.tableParams.reload()
-        });
+        // document.addEventListener("keydown", function (event) {
+        //     if (event.key === "Enter")
+        //         $scope.tableParams.reload()
+        // });
         $scope.edit = function (code) {
             var isEdit = true;
             dialogs.create('app/components/category/category.edit.html', 'CategoryEditController', {
@@ -55,14 +68,12 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
 
 
         }
-
         $scope.display = function (code) {
             $location.path("/category/display/" + code);
             $location.$$search = "";
             $location.replace();
             $location.$$compose();
         }
-
         $scope.add = function () {
             isEdit = false;
             dialogs.create('app/components/category/category.edit.html', 'CategoryEditController', {
@@ -87,20 +98,9 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
 
         }
 
-        $scope.searchParams = $location.search();
-        $scope.searchParams.orderBy == null || $scope.searchParams.orderBy == "" ? $scope.searchParams.orderBy = "subject" : $scope.searchParams.orderBy = $location.search().orderBy;
-        $scope.searchParams.sortDirection == null || $scope.searchParams.sortDirection == "" ? $scope.searchParams.sortDirection = "asc" : $scope.searchParams.sortDirection = $location.search().sortDirection;
-        $scope.searchParams.pageNumber == null || $scope.searchParams.pageNumber == "" ? $scope.searchParams.pageNumber = "1" : $scope.searchParams.pageNumber = $location.search().pageNumber;
-
-        if (Object.hasOwn($scope.searchParams, 'pageSize') || $scope.searchParams.pageSize == "10" || $scope.searchParams.pageSize == "25" || $scope.searchParams.pageSize == "50" || $scope.searchParams.pageSize == "100") {
-            $scope.searchParams.pageSize = $location.search().pageSize;
-        } else {
-            $scope.searchParams.pageSize = "10";
-        }
-
 
         $scope.search = function () {
-            $scope.tableParams.reload().then(function (data) {
+            $scope.tableParams.reload().then(function () {
                 if ($scope.searchParams.subject == "" || $scope.searchParams.subject == null || $scope.searchParams.subject == undefined) {
                     delete $scope.searchParams.subject;
                     console.log("value after: " + $scope.searchParams.subject);
@@ -110,7 +110,7 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
                 }
                 console.log($scope.searchParams);
                 $location.$$compose();
-            }, function (error) {
+            }, function () {
                 $scope.flashAlert('danger', "Problem occurred while searching categories");
             });
         }
@@ -129,38 +129,48 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
             },//Initial values show page 1 with pageSize equal to 10 on first load
 
             {
+
                 getData: function ($defer, params) {
+                    //Update searchParams with table data
 
-                    //Extract searchParams used by back-end from internal parameters of ng-table
+                    if (urlChanged == false) {
+                        $scope.searchParams.pageNumber = params.$params.page;
+                        $scope.searchParams.pageSize = params.$params.count;
+                        $scope.searchParams.orderBy = Object.keys(params.$params.sorting)[0];
+                        $scope.searchParams.sortDirection = Object.values(params.$params.sorting)[0];
+                        // Update the URL with the current table parameters
+                        $location.$$search = $scope.searchParams;
+                        $location.$$compose();
+                    }
 
-                    // params.$params.page = $location.$$search.pageNumber;
-                    // params.$params.count = $location.$$search.pageSize;
-                    // var myKey = $location.$$search.orderBy;
-                    // var myValue = $location.$$search.sortDirection;
-                    // var myobj={myKey:myValue}
-                    // params.$params.sorting.myKey=$location.$$search.orderBy
-                    // Object.values(params.$params.sorting)[0]=$location.$$search.sortDirection;
-                    // params.$params.sorting.value=$location.$$search.orderBy
-                    debugger
-                    $scope.searchParams.pageNumber = params.$params.page;
-                    $scope.searchParams.pageSize = params.$params.count;
-                    $scope.searchParams.orderBy = Object.keys(params.$params.sorting)[0];
-                    $scope.searchParams.sortDirection = Object.values(params.$params.sorting)[0];
-                    // Update the URL with the current table parameters
-                    $location.$$search = $scope.searchParams;
-                    $location.$$compose();
+
                     //Use category service to fetch data from back-end
                     CategoryService.search($scope.searchParams).$promise.then(onFulfillment, onRejection);
+
+                    if (urlChanged) {
+
+                        console.log(params.$params)
+                        params.$params.count = $scope.searchParams.pageSize;
+                        params.$params.page = $scope.searchParams.pageNumber;
+
+                        sortingKey = $scope.searchParams.orderBy;
+                        sortingValue = $scope.searchParams.sortDirection;
+                        sortingObject = {};
+                        sortingObject[sortingKey] = sortingValue;
+                        params.$params.sorting = sortingObject;
+                    }
 
                     function onFulfillment(searchResponse) {
                         //Update internal parameters of ng-table after arrival of new data from back-end, total count of data is used for rendering pagination
                         console.log(searchResponse)
                         params.total(searchResponse.totalCount);
+
+
                         var data = searchResponse.items.slice((searchResponse.pageSize - 1) * searchResponse.pageNumber, searchResponse.pageSize * searchResponse.pageNumber);
                         $defer.resolve(data);//Use defered API to provide category items to ng-table
                     }
 
-                    function onRejection(reason) {
+                    function onRejection() {
                         // Flash.create('danger', 'Problem occurred while searching categories')
                         $scope.flashAlert('danger', "Problem occurred while searching categories")
 
@@ -183,7 +193,7 @@ categoryModule.controller('categoryDisplayController', ['$scope', '$route', 'Cat
         $scope.code = searchResponse.code;
     }
 
-    function onRejection(reason) {
+    function onRejection() {
         // Flash.create('danger', 'Problem occurred while searching categories')
         $scope.code = searchResponse.code;
         $scope.flashAlert('danger', "Problem occurred while searching categories")
@@ -194,9 +204,9 @@ categoryModule.controller('categoryDisplayController', ['$scope', '$route', 'Cat
 categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
     $scope.code = data.code;
     $scope.isEditMode = data.isEditMode
-    $scope.disableBtn=false;
+    $scope.disableBtn = false;
     $scope.ok = function () {
-        $scope.disableBtn=true;
+        $scope.disableBtn = true;
         if ($scope.isEditMode) {
             CategoryService.editSubject({code: $scope.code}, {subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
         } else {
@@ -211,8 +221,6 @@ categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalIn
         function onRejection() {
             console.log("sda")
         }
-
-
     }
 
     $scope.cancel = function () {

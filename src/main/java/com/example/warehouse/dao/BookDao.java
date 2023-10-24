@@ -65,8 +65,7 @@ public class BookDao {
         if (categoryCode != null && !categoryCode.isEmpty()) {
             query.setParameter("code", categoryCode);
         }
-        List<BookEntity> books = query.getResultList();
-        return books;
+        return query.getResultList();
 
     }
 

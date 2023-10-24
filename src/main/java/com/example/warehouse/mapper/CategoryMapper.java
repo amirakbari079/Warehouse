@@ -27,8 +27,8 @@ public class CategoryMapper {
     public CategoryDtoPage categoryListEntityToDtoPage(List<CategoryEntity> categoryEntity, Integer pageNumber, Integer pageSize) {
         CategoryDtoPage categoryDtoPage = new CategoryDtoPage();
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        for (int i = 0; i < categoryEntity.size(); i++) {
-            categoryDtoList.add(toDto(categoryEntity.get(i)));
+        for (CategoryEntity entity : categoryEntity) {
+            categoryDtoList.add(toDto(entity));
         }
         categoryDtoPage.setItems(categoryDtoList);
         categoryDtoPage.setTotalCount((long) categoryDtoList.size());
