@@ -26,7 +26,7 @@ public class BookManager {
 
     @Transactional
     public void save(BookEntity book) throws IllegalArgumentException, CustomException, NotFoundException {
-//        isbnValidator(book);
+        isbnValidator(book);
             if (book.getTitle() == null || book.getPrice() == null) {
                 try {
                     book=fillNullFields(book);

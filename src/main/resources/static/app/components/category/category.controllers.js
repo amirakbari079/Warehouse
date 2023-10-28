@@ -29,10 +29,13 @@ categoryModule.controller('CategoryListController', ['$scope', 'CategoryService'
         //     if (event.key === "Enter")
         //         $scope.tableParams.reload()
         // });
-        $scope.edit = function (code) {
+        $scope.edit = function (code,subject) {
             var isEdit = true;
+            var currentSubject=subject;
             dialogs.create('app/components/category/category.edit.html', 'CategoryEditController', {
                 code: code,
+                subject:subject,
+                currentSubject:currentSubject,
                 isEditMode: isEdit
             }, {}, '').result.then(resolveCallback, rejectCallback);
 
@@ -203,10 +206,13 @@ categoryModule.controller('categoryDisplayController', ['$scope', '$route', 'Cat
 
 categoryModule.controller('CategoryEditController', ['$scope', 'data', '$modalInstance', 'CategoryService', function ($scope, data, $modalInstance, CategoryService) {
     $scope.code = data.code;
+    $scope.subject = data.subject;
+    $scope.currentSubject = data.currentSubject;
     $scope.isEditMode = data.isEditMode
     $scope.disableBtn = false;
     $scope.ok = function () {
         $scope.disableBtn = true;
+        debugger
         if ($scope.isEditMode) {
             CategoryService.editSubject({code: $scope.code}, {subject: $scope.subject}).$promise.then(onFulfillment, onRejection);
         } else {

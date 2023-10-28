@@ -51,7 +51,7 @@ public class CategoryService {
         }
     }
 
-    @PATCH
+    @PUT
     @Path("update/{code}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
