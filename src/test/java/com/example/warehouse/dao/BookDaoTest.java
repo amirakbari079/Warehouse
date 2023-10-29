@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ class BookDaoTest {
 
     //----------------------------------Save method-----------------------------------------
     @Test
+    @Transactional
     void save() {
         CategoryEntity category1 = new CategoryEntity();
         CategoryEntity category2 = new CategoryEntity();

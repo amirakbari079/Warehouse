@@ -1,7 +1,6 @@
 package com.example.warehouse.manager;
 import com.example.warehouse.entity.BookEntity;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,9 +30,11 @@ class BookManagerTest {
     @Test
     @Transactional
     void deleteBook_ExistedIsbn13_bookSuccessfullyDelete() throws Exception {
-        BookManager bookMg = Mockito.mock(BookManager.class);
-        bookMg.deleteBook("2345491954249");
-        Mockito.verify(bookMg).deleteBook("2345491954249");
+        try {
+            bookManager.deleteBook("2345491954249");
+        }catch (Exception e){
+            fail();
+        }
     }
 
     @Test
@@ -43,5 +44,5 @@ class BookManagerTest {
     }
     //----------------------------------------------------------------------------------------------
     //\/\/\/\\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-    //----------------------------------deleteBook method----------------------------------------
+
 }
